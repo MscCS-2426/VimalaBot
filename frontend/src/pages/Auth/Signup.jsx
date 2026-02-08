@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Signup.css";
-import collegeImg from "../assets/college.png";
+import collegeImg from "../../assets/college.png";
+
 
 const Signup = () => {
   const [show1, setShow1] = useState(false);

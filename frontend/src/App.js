@@ -1,46 +1,55 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Chat from "./pages/Chat";
-import About from "./pages/About";
-import RecentChat from "./pages/RecentChat";
-import FAQ from "./pages/Faq";
+// Pages
+import Home from "./pages/Home/Home";
+import Login from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Signup";
 
+// Chat main + views
+import Chat from "./pages/Chat/Chat";
+import NewChat from "./pages/ChatViews/NewChat";
+import RecentChat from "./pages/ChatViews/RecentChat";
+import About from "./pages/ChatViews/About";
+import FAQ from "./pages/ChatViews/Faq";
+
+// Layouts & components
 import HomeLayout from "./components/HomeLayout";
-import ChatWidget from "./components/ChatWidget"; // ✅ from Jumna
+import Layout from "./components/Layout";
+import ChatWidget from "./components/ChatWidget/ChatWidget";
 
 function App() {
   return (
     <Router>
-      <>
-        {/* Floating Chatbot Widget – appears on all pages */}
-        <ChatWidget />
+      {/* Floating chatbot – visible on all pages */}
+      <ChatWidget />
 
-        <Routes>
-          {/* Home WITH header & footer */}
-          <Route
-            path="/"
-            element={
-              <HomeLayout>
-                <Home />
-              </HomeLayout>
-            }
-          />
+      <Routes>
+        {/* Home page with Navbar + Footer */}
+        <Route
+          path="/"
+          element={
+            <HomeLayout>
+              <Home />
+            </HomeLayout>
+          }
+        />
 
-          {/* Pages WITHOUT header & footer */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/recentchat" element={<RecentChat />} />
-          <Route path="/faq" element={<FAQ />} />
+        {/* Auth pages */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
-          {/* Redirect unknown routes */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </>
+        {/* Chat section with Sidebar (Layout.jsx) */}
+        <Route path="/chat" element={<Layout />}>
+          <Route index element={<Chat />} />
+          <Route path="new" element={<NewChat />} />
+          <Route path="recent" element={<RecentChat />} />
+          <Route path="about" element={<About />} />
+          <Route path="faq" element={<FAQ />} />
+        </Route>
+
+        {/* Redirect unknown routes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </Router>
   );
 }
