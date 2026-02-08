@@ -9,32 +9,38 @@ import RecentChat from "./pages/RecentChat";
 import FAQ from "./pages/Faq";
 
 import HomeLayout from "./components/HomeLayout";
+import ChatWidget from "./components/ChatWidget"; // ✅ from Jumna
 
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Home WITH header & footer */}
-        <Route
-          path="/"
-          element={
-            <HomeLayout>
-              <Home />
-            </HomeLayout>
-          }
-        />
+      <>
+        {/* Floating Chatbot Widget – appears on all pages */}
+        <ChatWidget />
 
-        {/* Pages WITHOUT header & footer */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/recentchat" element={<RecentChat />} />
-        <Route path="/faq" element={<FAQ />} />
+        <Routes>
+          {/* Home WITH header & footer */}
+          <Route
+            path="/"
+            element={
+              <HomeLayout>
+                <Home />
+              </HomeLayout>
+            }
+          />
 
-        {/* Optional: redirect unknown routes to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Pages WITHOUT header & footer */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/recentchat" element={<RecentChat />} />
+          <Route path="/faq" element={<FAQ />} />
+
+          {/* Redirect unknown routes */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </>
     </Router>
   );
 }
