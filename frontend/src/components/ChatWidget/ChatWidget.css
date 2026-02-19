@@ -1,3 +1,4 @@
+/* Floating button */
 .chatbot-fab {
   position: fixed;
   bottom: 24px;
@@ -13,11 +14,12 @@
   z-index: 1000;
 }
 
+/* Main widget container */
 .chatbot-widget {
   position: fixed;
   bottom: 100px;
   right: 24px;
-  width: 360px;
+  width: 460px;
   height: 520px;
   background: #fff;
   border-radius: 16px;
@@ -28,25 +30,34 @@
   z-index: 1000;
 }
 
+/* Header */
 .chatbot-widget-header {
   background: #8e3c8a;
   color: #fff;
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;   /* Prevent shrinking */
 }
 
+/* Body below header */
 .chatbot-widget-body {
+  flex: 1;               /* IMPORTANT */
   display: flex;
-  height: 100%;
+  overflow: hidden;      /* Prevent outer overflow */
 }
 
+/* Sidebar */
 .chatbot-sidebar {
-  width: 120px;
+  width: 140px;
   background: #f6c9f2;
-  padding: 10px;
+  padding: 12px;
+  flex-shrink: 0;
+  overflow-y: auto;      /* Scroll if sidebar too tall */
 }
 
+/* Sidebar buttons */
 .chatbot-sidebar button {
   width: 100%;
   margin-bottom: 10px;
@@ -57,8 +68,18 @@
   cursor: pointer;
 }
 
+/* Content area */
 .chatbot-content-area {
   flex: 1;
   padding: 15px;
-  overflow-y: auto;
+  overflow-y: auto;   /* Pages scroll here */
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  margin-right: 10px;
 }

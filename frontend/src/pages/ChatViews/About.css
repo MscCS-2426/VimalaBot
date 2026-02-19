@@ -1,145 +1,94 @@
 .about-container {
-  padding: 40px 60px;
+  padding: 20px;
   background-color: #ffffff;
-  min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
 }
 
+/* Title */
 .about-title {
   text-align: center;
   color: #8e44ad;
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 700;
   margin-bottom: 6px;
 }
 
+/* Subtitle */
 .about-subtitle {
   text-align: center;
   color: #777;
-  font-size: 14px;
-  margin-bottom: 30px;
+  font-size: 13px;
+  margin-bottom: 20px;
 }
 
+/* Description */
 .about-description {
-  max-width: 900px;
-  margin: 0 auto 40px auto;
   text-align: center;
   color: #555;
-  line-height: 1.7;
-  font-size: 15px;
+  line-height: 1.6;
+  font-size: 14px;
+  margin-bottom: 25px;
 }
 
+/* Cards grid */
 .about-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 25px;
 }
 
+/* Individual card */
 .about-card {
   background: #f9f4f4;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 15px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
 }
 
 .about-card h3 {
   color: #8e44ad;
-  font-size: 16px;
-  margin-bottom: 10px;
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 .about-card p {
-  font-size: 14px;
+  font-size: 12px;
   color: #555;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
+/* Vision section */
 .vision-box {
   background: #f6efef;
-  padding: 25px;
-  border-radius: 14px;
-  max-width: 900px;
-  margin: 0 auto;
+  padding: 18px;
+  border-radius: 12px;
 }
 
 .vision-box h2 {
   color: #8e44ad;
-  margin-bottom: 10px;
+  font-size: 16px;
+  margin-bottom: 6px;
 }
 
 .vision-box p {
   color: #555;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .about-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
+/* Responsive inside widget */
+@media (max-width: 480px) {
   .about-cards {
     grid-template-columns: 1fr;
-  }
-
-  .about-container {
-    padding: 30px 20px;
-  }
-}
-
-/* 📱 MOBILE VIEW */
-@media (max-width: 768px) {
-  .about-container {
-    padding: 30px 20px;
   }
 
   .about-title {
-    font-size: 24px;
-  }
-
-  .about-subtitle {
-    font-size: 13px;
-    margin-bottom: 20px;
+    font-size: 20px;
   }
 
   .about-description {
-    font-size: 14px;
     text-align: left;
-    margin-bottom: 30px;
-  }
-
-  .about-cards {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .about-card {
-    padding: 18px;
-    text-align: left;
-  }
-
-  .about-card h3 {
-    font-size: 15px;
-  }
-
-  .about-card p {
-    font-size: 13px;
-  }
-
-  .vision-box {
-    padding: 20px;
-  }
-
-  .vision-box h2 {
-    font-size: 18px;
-  }
-
-  .vision-box p {
-    font-size: 13px;
   }
 }

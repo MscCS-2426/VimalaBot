@@ -12,28 +12,34 @@
   padding: 16px;
   overflow-y: auto;
   background: #fff;
+
+  display: flex;              /* IMPORTANT */
+  flex-direction: column;     /* IMPORTANT */
 }
 
 /* MESSAGE STYLES */
 .message {
-  max-width: 75%;
+  max-width: 70%;
   margin-bottom: 10px;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 14px;
   line-height: 1.4;
+  word-wrap: break-word;
 }
 
+/* BOT MESSAGE (LEFT) */
 .message.bot {
   background: #f2c2e8;
   color: #000;
-  align-self: flex-start;
+  align-self: flex-start;   /* Left side */
 }
 
+/* USER MESSAGE (RIGHT) */
 .message.user {
   background: #8b3f8f;
   color: #fff;
-  align-self: flex-end;
+  align-self: flex-end;     /* Right side */
 }
 
 /* INPUT AREA */
@@ -54,20 +60,6 @@
   border: 1px solid #ccc;
   outline: none;
   font-size: 14px;
-}
-
-/* UPLOAD BUTTON */
-.upload-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #8b3f8f;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
 }
 
 /* SEND BUTTON */

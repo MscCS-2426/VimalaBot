@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import NewChat from "../../pages/ChatViews/NewChat";
-import RecentChat from "../../pages/ChatViews/RecentChat";
 import Faq from "../../pages/ChatViews/Faq";
 import About from "../../pages/ChatViews/About";
 import "./ChatWidget.css";
@@ -9,11 +8,10 @@ import "./ChatWidget.css";
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
   const [activeView, setActiveView] = useState("new");
+  const [sidebarOpen, setSidebarOpen] = useState(true); // NEW
 
   const renderView = () => {
     switch (activeView) {
-      case "recent":
-        return <RecentChat />;
       case "faq":
         return <Faq />;
       case "about":
@@ -32,16 +30,43 @@ const ChatWidget = () => {
 
       {open && (
         <div className="chatbot-widget">
+          
+          {/* Header */}
           <div className="chatbot-widget-header">
+            
+            {/* ☰ Sidebar Toggle */}
+            <button
+              className="menu-btn"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              ☰
+            </button>
+
             <span>College Chatbot</span>
-            <button className="close-btn" onClick={() => setOpen(false)}>
+
+            <button
+              className="close-btn"
+              onClick={() => setOpen(false)}
+            >
               ✕
             </button>
           </div>
 
+          {/* Body */}
           <div className="chatbot-widget-body">
-            <Sidebar setActiveView={setActiveView} />
-            <div className="chatbot-content-area">{renderView()}</div>
+
+            {/* Sidebar (toggle controlled) */}
+            {sidebarOpen && (
+              <div className="chatbot-sidebar">
+                <Sidebar setActiveView={setActiveView} />
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="chatbot-content-area">
+              {renderView()}
+            </div>
+
           </div>
         </div>
       )}

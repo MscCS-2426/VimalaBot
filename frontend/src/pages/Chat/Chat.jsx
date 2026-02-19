@@ -5,13 +5,8 @@ import "./Chat.css";
 const Chat = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [messages, setMessages] = useState([]);   // ✅ MISSING STATE ADDED
   const [sessionId, setSessionId] = useState(null);
-  const [collectionName] = useState("default");
-
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "Upload a document and ask questions from it." },
-  ]);
 
   /* ================= CREATE SESSION ================= */
   useEffect(() => {
@@ -26,37 +21,6 @@ const Chat = () => {
     initSession();
   }, []);
 
-  /* ================= DOCUMENT UPLOAD ================= */
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setMessages((prev) => [
-      ...prev,
-      { sender: "user", text: `📄 ${file.name} uploaded` },
-    ]);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("collection", collectionName);
-
-    try {
-      setLoading(true);
-      await api.documentAPI.uploadDocument(formData);
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "✅ Document indexed successfully." },
-      ]);
-    } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "❌ Document upload failed." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   /* ================= SEND MESSAGE ================= */
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -65,6 +29,7 @@ const Chat = () => {
     const userText = input;
     setInput("");
 
+    // Add user message
     setMessages((prev) => [...prev, { sender: "user", text: userText }]);
 
     if (!sessionId) {
@@ -77,10 +42,11 @@ const Chat = () => {
 
     try {
       setLoading(true);
+
       const res = await api.chatAPI.sendMessage({
         message: userText,
         session_id: sessionId,
-        collection: collectionName,
+        collection: "default",
       });
 
       setMessages((prev) => [
@@ -102,7 +68,6 @@ const Chat = () => {
 
   return (
     <div className="chat-main">
-     
 
       {/* CHAT BODY */}
       <div className="chat-body">
@@ -111,23 +76,12 @@ const Chat = () => {
             {msg.text}
           </div>
         ))}
+
         {loading && <div className="message bot">⏳ Processing…</div>}
       </div>
 
       {/* INPUT */}
       <form className="chat-input" onSubmit={sendMessage}>
-        {/* Upload */}
-        <label className="upload-btn">
-          +
-          <input
-            type="file"
-            hidden
-            accept=".pdf,.doc,.docx,.txt"
-            onChange={handleFileUpload}
-          />
-        </label>
-
-        {/* Message input */}
         <input
           type="text"
           placeholder="Type a message..."
@@ -135,7 +89,6 @@ const Chat = () => {
           onChange={(e) => setInput(e.target.value)}
         />
 
-        {/* Send */}
         <button type="submit" className="send-btn">
           ▶
         </button>
