@@ -1,0 +1,90 @@
+/* MAIN CHAT AREA */
+.chat-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #ffffff;
+}
+
+/* CHAT BODY */
+.chat-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background: #F8F5F2; /* soft cream */
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* MESSAGE BASE */
+.message {
+  max-width: 70%;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* BOT MESSAGE (LEFT) */
+.message.bot {
+  background: #ffffff;           /* clean white */
+  color: #222;
+  align-self: flex-start;
+  border: 1px solid #E5E5E5;     /* subtle border */
+}
+
+/* USER MESSAGE (RIGHT) */
+.message.user {
+  background: #A11212;           /* rich red */
+  color: #fff;
+  align-self: flex-end;
+}
+
+/* INPUT AREA */
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #E5E5E5;
+  background: #ffffff;
+}
+
+/* TEXT INPUT */
+.chat-input input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+/* INPUT FOCUS EFFECT */
+.chat-input input:focus {
+  border-color: #8B0000;
+  box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+}
+
+/* SEND BUTTON */
+.send-btn {
+  background: #8B0000;
+  color: white;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+
+  flex-shrink: 0; /* 🚀 IMPORTANT - prevents shrinking */
+}
+/* HOVER EFFECT */
+.send-btn:hover {
+  background: #A11212;
+  transform: scale(1.05);
+}

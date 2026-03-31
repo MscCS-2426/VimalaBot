@@ -27,9 +27,7 @@ const Faq = () => {
         </details>
 
         <details>
-          <summary>
-            Can I check admission details through the chatbot?
-          </summary>
+          <summary>Can I check admission details through the chatbot?</summary>
           <p>
             Yes, you can check admission-related information such as eligibility,
             important dates, and procedures using the chatbot.

@@ -1,20 +1,27 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Chat from "./pages/Chat";
-import About from "./pages/About";
-import RecentChat from "./pages/RecentChat";
-import FAQ from "./pages/Faq";
+// Pages
+import Home from "./pages/Home/Home";
 
+// Chat main + views
+import Chat from "./pages/Chat/Chat";
+import NewChat from "./pages/ChatViews/NewChat";
+import About from "./pages/ChatViews/About";
+import FAQ from "./pages/ChatViews/Faq";
+
+// Layouts & components
 import HomeLayout from "./components/HomeLayout";
+import Layout from "./components/Layout";
+import ChatWidget from "./components/ChatWidget/ChatWidget";
 
 function App() {
   return (
     <Router>
+      {/* Floating chatbot – visible on all pages */}
+      <ChatWidget />
+
       <Routes>
-        {/* Home WITH header & footer */}
+        {/* Home page */}
         <Route
           path="/"
           element={
@@ -24,15 +31,15 @@ function App() {
           }
         />
 
-        {/* Pages WITHOUT header & footer */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/recentchat" element={<RecentChat />} />
-        <Route path="/faq" element={<FAQ />} />
+        {/* Chat section */}
+        <Route path="/chat" element={<Layout />}>
+          <Route index element={<Chat />} />
+          <Route path="new" element={<NewChat />} />
+          <Route path="about" element={<About />} />
+          <Route path="faq" element={<FAQ />} />
+        </Route>
 
-        {/* Optional: redirect unknown routes to home */}
+        {/* Redirect unknown routes */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
