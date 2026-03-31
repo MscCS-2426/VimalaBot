@@ -42,7 +42,7 @@ const ChatWidget = () => {
               ☰
             </button>
 
-            <span>College Chatbot</span>
+            <span>Vimala Bot</span>
 
             <button
               className="close-btn"

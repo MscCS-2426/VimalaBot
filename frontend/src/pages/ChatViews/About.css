@@ -1,13 +1,14 @@
+/* About Container */
 .about-container {
   padding: 20px;
-  background-color: #ffffff;
+  background-color: #F8F5F2; /* cream */
   font-family: "Segoe UI", sans-serif;
 }
 
 /* Title */
 .about-title {
   text-align: center;
-  color: #8e44ad;
+  color: #8B0000; /* deep red */
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 6px;
@@ -16,7 +17,7 @@
 /* Subtitle */
 .about-subtitle {
   text-align: center;
-  color: #777;
+  color: #666;
   font-size: 13px;
   margin-bottom: 20px;
 }
@@ -24,7 +25,7 @@
 /* Description */
 .about-description {
   text-align: center;
-  color: #555;
+  color: #444;
   line-height: 1.6;
   font-size: 14px;
   margin-bottom: 25px;
@@ -40,19 +41,28 @@
 
 /* Individual card */
 .about-card {
-  background: #f9f4f4;
-  border-radius: 10px;
+  background: #ffffff;
+  border-radius: 12px;
   padding: 15px;
   text-align: center;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E5E5E5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: 0.3s ease;
 }
 
+/* Hover effect */
+.about-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Card title */
 .about-card h3 {
-  color: #8e44ad;
+  color: #A11212; /* rich red */
   font-size: 14px;
   margin-bottom: 6px;
 }
 
+/* Card text */
 .about-card p {
   font-size: 12px;
   color: #555;
@@ -61,24 +71,28 @@
 
 /* Vision section */
 .vision-box {
-  background: #f6efef;
+  background: #ffffff;
   padding: 18px;
   border-radius: 12px;
+  border-left: 4px solid #8B0000; /* highlight */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* Vision title */
 .vision-box h2 {
-  color: #8e44ad;
+  color: #8B0000;
   font-size: 16px;
   margin-bottom: 6px;
 }
 
+/* Vision text */
 .vision-box p {
-  color: #555;
+  color: #444;
   font-size: 13px;
   line-height: 1.5;
 }
 
-/* Responsive inside widget */
+/* Responsive */
 @media (max-width: 480px) {
   .about-cards {
     grid-template-columns: 1fr;

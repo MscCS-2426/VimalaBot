@@ -2,8 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 // Pages
 import Home from "./pages/Home/Home";
-import Login from "./pages/Auth/Login";
-import Signup from "./pages/Auth/Signup";
 
 // Chat main + views
 import Chat from "./pages/Chat/Chat";
@@ -16,19 +14,14 @@ import HomeLayout from "./components/HomeLayout";
 import Layout from "./components/Layout";
 import ChatWidget from "./components/ChatWidget/ChatWidget";
 
-
-
-
 function App() {
- 
-  return ( 
-    
+  return (
     <Router>
       {/* Floating chatbot – visible on all pages */}
       <ChatWidget />
 
       <Routes>
-        {/* Home page with Navbar + Footer */}
+        {/* Home page */}
         <Route
           path="/"
           element={
@@ -38,11 +31,7 @@ function App() {
           }
         />
 
-        {/* Auth pages */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-
-        {/* Chat section with Sidebar (Layout.jsx) */}
+        {/* Chat section */}
         <Route path="/chat" element={<Layout />}>
           <Route index element={<Chat />} />
           <Route path="new" element={<NewChat />} />
@@ -53,9 +42,7 @@ function App() {
         {/* Redirect unknown routes */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Router>  
-
-    
+    </Router>
   );
 }
 

@@ -1,4 +1,22 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 body {
   margin: 0;
   background-color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif; /* ✅ modern font */
+}
+/* Smooth text rendering */
+* {
+  box-sizing: border-box;
+}
+
+/* Better heading style */
+h1, h2, h3 {
+  font-weight: 600;
+}
+
+/* Buttons look consistent */
+button {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }

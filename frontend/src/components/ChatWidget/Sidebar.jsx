@@ -4,7 +4,6 @@ import "./ChatWidget.css";
 const Sidebar = ({ setActiveView }) => {
   return (
     <div className="chatbot-sidebar">
-      <h4>Chatbot</h4>
 
       <button onClick={() => setActiveView("new")}>New Chat</button>
       <button onClick={() => setActiveView("faq")}>FAQ</button>

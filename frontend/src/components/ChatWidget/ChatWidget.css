@@ -6,12 +6,13 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #8e3c8a;
+  background: #8B0000; /* Deep Red */
   color: white;
   font-size: 26px;
   border: none;
   cursor: pointer;
   z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 /* Main widget container */
@@ -21,9 +22,9 @@
   right: 24px;
   width: 460px;
   height: 520px;
-  background: #fff;
+  background: #F8F5F2; /* Cream White */
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -32,49 +33,72 @@
 
 /* Header */
 .chatbot-widget-header {
-  background: #8e3c8a;
+  background: #8B0000; /* Red Header */
   color: #fff;
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0;   /* Prevent shrinking */
+  flex-shrink: 0;
 }
 
 /* Body below header */
 .chatbot-widget-body {
-  flex: 1;               /* IMPORTANT */
+  flex: 1;
   display: flex;
-  overflow: hidden;      /* Prevent outer overflow */
+  overflow: hidden;
 }
 
 /* Sidebar */
 .chatbot-sidebar {
-  width: 140px;
-  background: #f6c9f2;
+  width: 180px;
+  background: #F1EDEA;
   padding: 12px;
   flex-shrink: 0;
-  overflow-y: auto;      /* Scroll if sidebar too tall */
+  overflow: hidden;
+  border-right: 1px solid #E5E5E5;
+
+  display: flex;              /* 🔥 important */
+  flex-direction: column;
+  align-items: center;        /* 👉 centers horizontally */
 }
 
 /* Sidebar buttons */
 .chatbot-sidebar button {
-  width: 100%;
+  width: 90%;                /* instead of 100% */
   margin-bottom: 10px;
   padding: 8px;
   border: none;
   border-radius: 6px;
-  background: #c87dbd;
+  background: #A11212;
+  color: white;
   cursor: pointer;
+  transition: 0.3s;
+  text-align: center;        /* ensures text centered */
+}
+
+/* Hover effect */
+.chatbot-sidebar button:hover {
+  background: #8B0000;
+}
+
+/* Active button (optional) */
+.chatbot-sidebar button.active {
+  background: white;
+  color: #8B0000;
+  border: 1px solid #8B0000;
 }
 
 /* Content area */
 .chatbot-content-area {
   flex: 1;
   padding: 15px;
-  overflow-y: auto;   /* Pages scroll here */
+  overflow-y: auto;
+  background: #FFFFFF;
+  color: #222222;
 }
 
+/* Header menu button */
 .menu-btn {
   background: none;
   border: none;

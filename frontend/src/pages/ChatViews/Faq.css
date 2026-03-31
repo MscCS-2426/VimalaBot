@@ -1,6 +1,7 @@
+/* FAQ Container */
 .faq-container {
   padding: 20px;
-  background-color: #ffffff;
+  background-color: #F8F5F2; /* cream */
   font-family: "Segoe UI", sans-serif;
 }
 
@@ -9,7 +10,7 @@
   text-align: center;
   font-size: 22px;
   font-weight: 700;
-  color: #8e44ad;
+  color: #8B0000; /* red */
   margin-bottom: 6px;
 }
 
@@ -17,7 +18,7 @@
 .faq-subtitle {
   text-align: center;
   font-size: 13px;
-  color: #777;
+  color: #666;
   margin-bottom: 20px;
 }
 
@@ -28,18 +29,25 @@
 
 /* Each FAQ Item */
 .faq-list details {
-  background: #f5f5f5;
-  border-radius: 8px;
+  background: #ffffff;
+  border-radius: 10px;
   padding: 12px 14px;
   margin-bottom: 12px;
   cursor: pointer;
+  border: 1px solid #E5E5E5;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.faq-list details:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* Question */
 .faq-list summary {
   font-size: 14px;
   font-weight: 500;
-  color: #8e44ad;
+  color: #A11212; /* rich red */
   list-style: none;
   display: flex;
   justify-content: space-between;
@@ -51,6 +59,7 @@
   content: "⌄";
   font-size: 16px;
   transition: transform 0.3s ease;
+  color: #8B0000;
 }
 
 /* Rotate arrow when open */
@@ -62,8 +71,8 @@
 .faq-list details p {
   margin-top: 10px;
   font-size: 13px;
-  color: #555;
-  line-height: 1.5;
+  color: #444;
+  line-height: 1.6;
 }
 
 /* Remove default arrow */
@@ -71,7 +80,7 @@ summary::-webkit-details-marker {
   display: none;
 }
 
-/* Responsive inside widget */
+/* Responsive */
 @media (max-width: 480px) {
   .faq-title {
     font-size: 20px;
