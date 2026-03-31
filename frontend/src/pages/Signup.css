@@ -1,0 +1,9 @@
+@import "./Login.css";
+
+/* minor overrides for signup if needed */
+.auth-signup .card h3 { color: #6b2f8f; }
+.auth-signup .auth-btn { background: #7b3aa0; }
+/* keep wrapper transparent and match larger size */
+.auth-signup .logo-wrap { padding: 0; }
+.auth-signup .college-logo { width: auto; max-width: 720px; max-height: 320px; display:block; margin: 0 auto 8px; }
+.auth-signup .college-logo.logo-fallback { width: 720px; height: 320px; background: transparent; }
