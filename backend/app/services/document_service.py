@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import List, Dict, Any
 from fastapi import UploadFile, HTTPException
-import PyPDF2
+import pypdf
 import docx
 import io
 import json
@@ -19,7 +19,7 @@ class DocumentService:
         content = file.file.read()
 
         if file.filename.endswith('.pdf'):
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
+            pdf_reader = pypdf.PdfReader(io.BytesIO(content))
             text = ""
             for page in pdf_reader.pages:
                 text += page.extract_text()

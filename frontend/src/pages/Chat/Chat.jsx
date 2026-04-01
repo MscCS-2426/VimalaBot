@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api";
+import { chatAPI } from "../../services/api";
 import "./Chat.css";
 
 const Chat = () => {
@@ -12,7 +12,7 @@ const Chat = () => {
   useEffect(() => {
     const initSession = async () => {
       try {
-        const res = await api.chatAPI.createSession();
+        const res = await chatAPI.createSession();
         setSessionId(res.session_id || res.data?.session_id);
       } catch (err) {
         console.error("Session creation failed", err);
@@ -43,11 +43,11 @@ const Chat = () => {
     try {
       setLoading(true);
 
-      const res = await api.chatAPI.sendMessage({
-        message: userText,
-        session_id: sessionId,
-        collection: "default",
-      });
+      const res = await chatAPI.sendMessage(
+        userText,
+        sessionId,
+        "default"
+      );
 
       setMessages((prev) => [
         ...prev,

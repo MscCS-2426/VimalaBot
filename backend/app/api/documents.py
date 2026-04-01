@@ -38,25 +38,7 @@ async def list_documents(collection_name: str = "default", limit: int = 100):
     return document_service.list_documents(collection_name, limit)
 
 
-@router.get("/{doc_id}", response_model=DocumentDetails)
-async def get_document_details(doc_id: str, collection_name: str = "default"):
-    """Get detailed information about a specific document"""
-    return document_service.get_document_details(doc_id, collection_name)
-
-
-@router.delete("/{doc_id}")
-async def delete_document(doc_id: str, collection_name: str = "default"):
-    """Delete a document from the collection"""
-    return document_service.delete_document(doc_id, collection_name)
-
-
-@router.put("/{doc_id}")
-async def update_document(doc_id: str, document: DocumentUpload, collection_name: str = "default"):
-    """Update a document by replacing it"""
-    return document_service.update_document(doc_id, document, collection_name)
-
-
-# Collection Management Routes
+# Collection Management Routes (must be before /{doc_id} to avoid route conflicts)
 @router.get("/collections/list", response_model=dict)
 async def list_collections():
     """List all available collections"""
@@ -122,3 +104,22 @@ async def delete_collection(collection_name: str):
         if "does not exist" in str(e).lower():
             raise HTTPException(status_code=404, detail="Collection not found")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Document-by-ID routes (after /collections/* to avoid route conflicts)
+@router.get("/{doc_id}", response_model=DocumentDetails)
+async def get_document_details(doc_id: str, collection_name: str = "default"):
+    """Get detailed information about a specific document"""
+    return document_service.get_document_details(doc_id, collection_name)
+
+
+@router.delete("/{doc_id}")
+async def delete_document(doc_id: str, collection_name: str = "default"):
+    """Delete a document from the collection"""
+    return document_service.delete_document(doc_id, collection_name)
+
+
+@router.put("/{doc_id}")
+async def update_document(doc_id: str, document: DocumentUpload, collection_name: str = "default"):
+    """Update a document by replacing it"""
+    return document_service.update_document(doc_id, document, collection_name)

@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer
-from jose import jwt, JWTError
-from app.core.config import settings
+import jwt
+from jwt.exceptions import PyJWTError
+from .config import settings
 
 security = HTTPBearer()
 ALGORITHM = "HS256"
@@ -19,5 +20,5 @@ def admin_required(token=Depends(security)):
 
         return payload
 
-    except JWTError:
+    except PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token")

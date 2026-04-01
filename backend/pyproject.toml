@@ -12,11 +12,17 @@ dependencies = [
     "groq==0.26.0",
     "sentence-transformers==4.1.0",
     "chromadb==1.4.0",
-    "PyPDF2==3.0.1",
     "python-docx==1.1.0",
     "httpx==0.28.1",
     "python-dotenv==1.1.0",
     "fastapi-cors==0.0.6",
     "typing-extensions==4.13.2",
-    "python-jose==3.3.0",
+    "pypdf>=6.9.2",
+    "pyjwt[crypto]>=2.12.1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.0.2",
 ]

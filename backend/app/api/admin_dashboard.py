@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.core.admin import admin_required
+from ..core.admin import admin_required
 
 router = APIRouter(prefix="/admin", tags=["Admin Dashboard"])
 

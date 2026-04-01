@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from datetime import datetime, timedelta
-from jose import jwt
+from datetime import datetime, timedelta, timezone
+import jwt
 from ..core.config import settings
 
 router = APIRouter(
@@ -30,7 +30,7 @@ def admin_login(data: AdminLoginRequest):
     payload = {
         "sub": data.username,
         "role": "admin",
-        "exp": datetime.utcnow() + timedelta(hours=2),
+        "exp": datetime.now(timezone.utc) + timedelta(hours=2),
     }
 
     token = jwt.encode(

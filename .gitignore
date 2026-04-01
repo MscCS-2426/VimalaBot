@@ -30,4 +30,7 @@ chat_venv/
 Thumbs.db
 
 # Database files (if local, like your chroma_db)
-chroma_db/scraper/export/all.md 
+chroma_db/
+
+# Runtime
+.pids/

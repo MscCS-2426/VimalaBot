@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
-from .api import chat, documents, admin_auth
 from .api import chat, documents, admin_auth, admin_dashboard
 
 

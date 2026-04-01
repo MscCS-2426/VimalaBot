@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Widget Demo – Any Website</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 800px; margin: 60px auto; padding: 0 20px; color: #333; }
+    h1 { color: #222; }
+    p { line-height: 1.8; font-size: 17px; }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Some Random Website</h1>
+  <p>
+    This page demonstrates that the Vimala Bot widget can be embedded into
+    <strong>any website</strong> with a single script tag. The chatbot floats
+    in the bottom-right corner and connects to your backend API.
+  </p>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante
+    ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+    Nulla facilisi. Praesent vitae magna et mi tincidunt commodo.
+  </p>
+  <p>
+    Click the chat bubble in the bottom-right corner to start chatting!
+  </p>
+
+  <!-- THIS IS ALL YOU NEED TO EMBED THE WIDGET -->
+  <script
+    src="./widget.js"
+    data-api="http://localhost:8000"
+    data-title="Vimala Bot"
+    data-collection="default"
+    data-color="#8B0000"
+  ></script>
+
+</body>
+</html>

@@ -49,6 +49,6 @@ def get_chroma_collection(collection_name: str = "default"):
     client = get_chroma_client()
     try:
         collection = client.get_collection(name=collection_name)
-    except:
+    except Exception:
         collection = client.create_collection(name=collection_name)
     return collection
