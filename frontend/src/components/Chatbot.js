@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, MessageCircle } from 'lucide-react';
+import { Send, MessageCircle, Paperclip } from 'lucide-react'; // ✅ added Paperclip
 import { chatAPI } from '../services/api';
 import './Chatbot.css';
 
@@ -9,10 +9,10 @@ const Chatbot = () => {
   const [sessionId, setSessionId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState('default');
+  const [file, setFile] = useState(null); // ✅ added
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Create a new session when component mounts
     createNewSession();
     try {
       const savedCollection = localStorage.getItem('selectedCollection');
@@ -37,6 +37,48 @@ const Chatbot = () => {
     }
   };
 
+  // ✅ FILE UPLOAD FUNCTION
+  const handleFileUpload = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("collection", selectedCollection);
+
+    try {
+      await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+        body: formData,
+      });
+
+      // Show success in chat
+      setMessages(prev => [
+        ...prev,
+        {
+          type: 'bot',
+          text: `File "${selectedFile.name}" uploaded successfully.`,
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+    } catch (err) {
+      console.error(err);
+      setMessages(prev => [
+        ...prev,
+        {
+          type: 'bot',
+          text: 'File upload failed.',
+          timestamp: new Date().toISOString(),
+          isError: true,
+        }
+      ]);
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -52,22 +94,23 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      // Pull chat config and system prompt from localStorage
       const systemPrompt = localStorage.getItem('systemPrompt') || undefined;
       const groqModel = localStorage.getItem('chat_groq_model') || undefined;
       const maxTokensStr = localStorage.getItem('chat_max_tokens');
       const temperatureStr = localStorage.getItem('chat_temperature');
       const topPStr = localStorage.getItem('chat_top_p');
+
       const config = {
         system_prompt: systemPrompt,
         groq_model: groqModel || undefined,
       };
+
       if (maxTokensStr) config.max_tokens = Number(maxTokensStr);
       if (temperatureStr) config.temperature = Number(temperatureStr);
       if (topPStr) config.top_p = Number(topPStr);
 
       const response = await chatAPI.sendMessage(input, sessionId, selectedCollection, config);
-      
+
       const botMessage = {
         type: 'bot',
         text: response.response,
@@ -97,7 +140,6 @@ const Chatbot = () => {
     }
   };
 
-
   const handleNewChat = () => {
     setMessages([]);
     createNewSession();
@@ -125,11 +167,12 @@ const Chatbot = () => {
             <p>Start a conversation or upload documents so the chatbot has specialized knowledge!</p>
           </div>
         )}
-        
+
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.type}`}>
             <div className="message-content">
               <div className="message-text">{message.text}</div>
+
               {message.sources && message.sources.length > 0 && (
                 <div className="message-sources">
                   <details>
@@ -156,7 +199,7 @@ const Chatbot = () => {
             </div>
           </div>
         ))}
-        
+
         {isLoading && (
           <div className="message bot">
             <div className="message-content">
@@ -168,12 +211,24 @@ const Chatbot = () => {
             </div>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
+      {/* ✅ UPDATED INPUT SECTION */}
       <div className="chat-input">
         <div className="input-container">
+
+          {/* 📎 Upload Button */}
+          <label className="upload-btn">
+            <Paperclip size={18} />
+            <input 
+              type="file" 
+              hidden 
+              onChange={handleFileUpload}
+            />
+          </label>
+
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -182,6 +237,7 @@ const Chatbot = () => {
             disabled={isLoading}
             rows={1}
           />
+
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
