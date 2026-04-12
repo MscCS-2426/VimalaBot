@@ -70,6 +70,22 @@
   box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
 }
 
+/* UPLOAD BUTTON */
+.upload-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: 0.2s;
+}
+
+.upload-btn:hover {
+  background: #f0f0f0;
+}
+
 /* SEND BUTTON */
 .send-btn {
   background: #8B0000;

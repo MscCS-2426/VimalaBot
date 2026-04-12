@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { chatAPI } from "../../services/api";
+import React, { useEffect, useState, useRef } from "react";
+import { chatAPI, documentAPI } from "../../services/api";
 import "./Chat.css";
 
 const Chat = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([]);   // ✅ MISSING STATE ADDED
+  const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState(null);
+  const fileInputRef = useRef(null);
 
   /* ================= CREATE SESSION ================= */
   useEffect(() => {
@@ -20,6 +21,28 @@ const Chat = () => {
     };
     initSession();
   }, []);
+
+  /* ================= FILE UPLOAD ================= */
+  const handleFileUpload = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    try {
+      await documentAPI.uploadDocument(selectedFile, "default");
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: `File "${selectedFile.name}" uploaded successfully.` },
+      ]);
+    } catch (err) {
+      console.error("File upload failed", err);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "❌ File upload failed." },
+      ]);
+    } finally {
+      e.target.value = "";
+    }
+  };
 
   /* ================= SEND MESSAGE ================= */
   const sendMessage = async (e) => {
@@ -82,6 +105,20 @@ const Chat = () => {
 
       {/* INPUT */}
       <form className="chat-input" onSubmit={sendMessage}>
+        <button
+          type="button"
+          className="upload-btn"
+          onClick={() => fileInputRef.current?.click()}
+          title="Upload file"
+        >
+          📎
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          hidden
+          onChange={handleFileUpload}
+        />
         <input
           type="text"
           placeholder="Type a message..."
