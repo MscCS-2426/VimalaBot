@@ -1,0 +1,70 @@
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; height: 68px;
+  background: rgba(244,239,233,0.93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow 0.25s var(--ease);
+}
+.scrolled { box-shadow: 0 4px 20px rgba(139,0,0,0.08); }
+
+.logo {
+  font-family: var(--fd); font-size: 1.35rem; font-weight: 800;
+  color: var(--crimson); letter-spacing: -0.3px; flex-shrink: 0;
+}
+
+.links {
+  display: flex; list-style: none; gap: 36px;
+}
+.links a {
+  font-size: 0.88rem; font-weight: 500; color: var(--muted);
+  position: relative; transition: color 0.2s;
+}
+.links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 2px; background: var(--crimson);
+  border-radius: 2px; transition: width 0.25s;
+}
+.links a:hover, .links a.active { color: var(--crimson); }
+.links a:hover::after, .links a.active::after { width: 100%; }
+
+.cta {
+  background: var(--crimson); color: #fff;
+  border-radius: var(--rs); padding: 9px 22px;
+  font-size: 0.87rem; font-weight: 600;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.cta:hover {
+  background: var(--crimson-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--crimson-glow);
+}
+
+.hamburger {
+  display: none; color: var(--crimson);
+  font-size: 1.25rem; width: 36px; height: 36px;
+  align-items: center; justify-content: center;
+}
+
+.mobileMenu {
+  position: fixed; top: 68px; left: 0; right: 0; z-index: 999;
+  background: var(--bg-white);
+  display: flex; flex-direction: column; gap: 0;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  animation: fadeUp 0.2s ease both;
+}
+.mobileMenu a {
+  padding: 13px 24px; font-weight: 500; color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s, background 0.2s;
+}
+.mobileMenu a:hover { color: var(--crimson); background: var(--crimson-soft); }
+.mobileMenu .cta { margin: 14px 24px 18px; width: calc(100% - 48px); }
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 20px; }
+  .links, .cta { display: none; }
+  .hamburger { display: flex; }
+}

@@ -1,100 +1,70 @@
-# Frontend
+# Getting Started with Create React App
 
-React single-page application for the college chatbot. Includes a home page, chat interface, and a floating chat widget that can be toggled on any page.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Setup
+## Available Scripts
 
-```bash
-# Install dependencies
-npm install
+In the project directory, you can run:
 
-# Run dev server
-npm start
-```
+### `npm start`
 
-Opens at http://localhost:3000. Expects the backend running at http://localhost:8000.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## Project Structure
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-```
-frontend/src/
-├── App.js                      # Router — all routes defined here
-├── index.js                    # React entry point
-├── index.css                   # Global styles (Plus Jakarta Sans font)
-├── services/
-│   └── api.js                  # API client (axios) — chatAPI + documentAPI
-├── components/
-│   ├── ChatWidget/             # Floating chat widget (appears on all pages)
-│   │   ├── ChatWidget.jsx      #   Toggle open/close, sidebar, view switching
-│   │   ├── ChatWidget.css      #   Widget styles
-│   │   └── Sidebar.jsx         #   Sidebar navigation (New Chat, FAQ, About)
-│   ├── HomeLayout.jsx          # Layout wrapper for the home page
-│   ├── Layout.jsx              # Layout with sidebar for chat section
-│   ├── Layout.css              # Navbar + layout styles
-│   ├── Navbar.jsx              # Top navigation bar
-│   └── Footer.jsx              # Page footer
-├── pages/
-│   ├── Home/
-│   │   ├── Home.jsx            # Landing page
-│   │   └── Home.css
-│   ├── Chat/
-│   │   ├── Chat.jsx            # Main chat interface (session + messages)
-│   │   └── Chat.css
-│   └── ChatViews/
-│       ├── NewChat.jsx         # Wrapper that renders Chat
-│       ├── About.jsx           # About page (inside widget)
-│       ├── About.css
-│       ├── Faq.jsx             # FAQ page (inside widget)
-│       └── Faq.css
-└── assets/                     # Images (college logo, backgrounds)
-```
+### `npm test`
 
-## Routes
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-| Path | Component | Description |
-|------|-----------|-------------|
-| `/` | Home (in HomeLayout) | Landing page with navbar + footer |
-| `/chat` | Chat (in Layout) | Chat interface with sidebar |
-| `/chat/new` | NewChat | New chat session |
-| `/chat/about` | About | About page |
-| `/chat/faq` | FAQ | Frequently asked questions |
-| `*` | Redirect to `/` | Catch-all |
+### `npm run build`
 
-The `ChatWidget` component is rendered globally (outside routes) as a floating button on every page.
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## API Client
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-`src/services/api.js` exports two API modules:
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### chatAPI
-- `sendMessage(message, sessionId, collectionName, config)` — send chat message
-- `createSession(userId, metadata)` — create new session
-- `getHistory(sessionId)` — get conversation history
-- `deleteSession(sessionId)` — delete a session
-- `listSessions()` — list all sessions
+### `npm run eject`
 
-### documentAPI
-- `uploadDocument(file, collectionName, metadata)` — upload file (PDF/DOCX/TXT)
-- `embedText(content, title, metadata, collectionName)` — embed text directly
-- `listDocuments(collectionName, limit)` — list documents
-- `getDocument(docId, collectionName)` — get document details
-- `deleteDocument(docId, collectionName)` — delete document
-- `listCollections()` — list all collections
-- `createCollection(name, metadata, overwrite)` — create collection
-- `deleteCollection(name)` — delete collection
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-## Environment
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-The API base URL defaults to `http://localhost:8000/api/v1`. Override with:
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-```
-REACT_APP_API_URL=https://your-api.com/api/v1
-```
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Build
+## Learn More
 
-```bash
-npm run build
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Outputs optimized production build to `build/`.
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

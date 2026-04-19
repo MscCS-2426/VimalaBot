@@ -1,0 +1,52 @@
+.page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: var(--bg);
+}
+.card {
+  width: 100%; max-width: 420px;
+  background: var(--bg-white); border: 1px solid var(--border);
+  border-radius: 20px; padding: 46px 40px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeScale 0.45s cubic-bezier(0.34,1.2,0.64,1) both;
+}
+.logo {
+  font-family: var(--fd); font-size: 1.5rem; font-weight: 800;
+  color: var(--crimson); margin-bottom: 4px;
+}
+h2 { font-size: 1.55rem; font-weight: 700; margin-bottom: 4px; }
+.sub { font-size: 0.83rem; color: var(--muted); margin-bottom: 28px; }
+
+.error {
+  background: rgba(139,0,0,0.07); border: 1px solid rgba(139,0,0,0.2);
+  color: var(--crimson); border-radius: var(--rs);
+  padding: 9px 13px; font-size: 0.83rem; margin-bottom: 16px;
+  animation: shake 0.3s ease;
+}
+
+.form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 0.76rem; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.field input {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--rs); padding: 11px 14px;
+  font-family: var(--fb); font-size: 0.88rem; color: var(--text);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field input:focus {
+  border-color: var(--crimson); box-shadow: 0 0 0 3px var(--crimson-soft);
+}
+
+.btn {
+  background: var(--crimson); color: #fff;
+  border-radius: var(--rs); padding: 13px; font-size: 0.93rem; font-weight: 600;
+  margin-top: 4px; transition: background 0.2s, transform 0.15s;
+}
+.btn:hover:not(:disabled) { background: var(--crimson-mid); transform: translateY(-1px); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.back { margin-top: 18px; text-align: center; font-size: 0.8rem; color: var(--muted); }
+.back a { color: var(--crimson); font-weight: 500; }
+.back a:hover { text-decoration: underline; }
