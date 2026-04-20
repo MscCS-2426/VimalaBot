@@ -2,6 +2,21 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { sendChat } from '../services/api';
 import styles from './ChatWidget.module.css';
 
+// ADD THIS after your imports
+function cleanResponse(text) {
+  return text
+    .replace(/#{1,6}\s*/g, '')          // removes ### ## #
+    .replace(/\*\*(.*?)\*\*/g, '$1')    // removes **bold**
+    .replace(/\*(.*?)\*/g, '$1')        // removes *italic*
+    .replace(/^\s*[*\-+]\s+/gm, '• ')  // converts * - + list items to bullet •
+    .replace(/^\s*\+\s+/gm, '  • ')    // converts + sub-items to indented bullet
+    .replace(/`(.*?)`/g, '$1')          // removes `code`
+    .replace(/\n{3,}/g, '\n\n')         // removes extra blank lines
+    .replace(/\b\w+\.docx\b/g, '')      // removes .docx filenames
+    .replace(/\b\w+\.pdf\b/g, '')       // removes .pdf filenames
+    .trim();
+}
+
 // ── FAQ data shown inside chat widget ──────────────────────────
 const FAQ_ITEMS = [
   { q: 'What is Vimala Bot?', a: 'Vimala Bot is an AI-powered assistant for our college, providing instant answers about admissions, courses, fees, and schedules — 24/7.' },
@@ -38,19 +53,66 @@ function TypingDots() {
 // ── Single message ───────────────────────────────────────────────
 function Message({ msg }) {
   const isUser = msg.role === 'user';
+
+  const renderBotContent = (text) => {
+    const cleaned = cleanResponse(text);
+    const lines = cleaned.split('\n');
+
+    return lines.map((line, i) => {
+      const trimmed = line.trim();
+      if (!trimmed) return <div key={i} style={{ height: '6px' }} />;
+
+      // Section heading (no bullet, short line ending with nothing or colon)
+      if (!trimmed.startsWith('•') && trimmed.endsWith(':')) {
+        return (
+          <div key={i} style={{
+            fontWeight: 'bold',
+            marginTop: '10px',
+            marginBottom: '2px',
+            color: '#7a0000',
+            fontSize: '13px',
+          }}>
+            {trimmed}
+          </div>
+        );
+      }
+
+      // Bullet point line
+      if (trimmed.startsWith('•')) {
+        return (
+          <div key={i} style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '6px',
+            marginLeft: '8px',
+            marginBottom: '2px',
+            fontSize: '13px',
+            lineHeight: '1.5',
+          }}>
+            <span style={{ color: '#7a0000', fontWeight: 'bold', marginTop: '1px' }}>•</span>
+            <span>{trimmed.slice(1).trim()}</span>
+          </div>
+        );
+      }
+
+      // Normal line
+      return (
+        <div key={i} style={{
+          fontSize: '13px',
+          lineHeight: '1.6',
+          marginBottom: '2px',
+        }}>
+          {trimmed}
+        </div>
+      );
+    });
+  };
+
   return (
     <div className={`${styles.msgRow} ${isUser ? styles.userRow : ''}`}>
       {!isUser && <div className={styles.avatar}>V</div>}
       <div className={`${styles.bubble} ${isUser ? styles.user : styles.bot} ${styles.popIn}`}>
-        {msg.content}
-        {!isUser && msg.sources && msg.sources.length > 0 && (
-          <div className={styles.sources}>
-            {msg.sources.slice(0, 3).map((s, i) => {
-              const name = s.metadata?.source || s.id || 'document';
-              return <span key={i}>📄 {name.length > 20 ? name.slice(0, 18) + '…' : name}</span>;
-            })}
-          </div>
-        )}
+        {isUser ? msg.content : renderBotContent(msg.content)}
       </div>
     </div>
   );
@@ -118,7 +180,7 @@ export default function ChatWidget({ isOpen, onClose }) {
   const [view, setView] = useState(VIEW.CHAT);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [messages, setMessages] = useState([
-    { role: 'bot', content: '👋 Hi! I\'m Vimala Bot, your college assistant. Ask me about admissions, fees, courses, schedules and more!' },
+    { role: 'bot', content: '👋 Hi! I\'m Vimala Bot, your college assistant. How can i help you today?' },
   ]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
