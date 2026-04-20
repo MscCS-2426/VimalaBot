@@ -26,7 +26,7 @@ class ChatService:
         You are an AI assistant.
 
         Answer ONLY using the provided context.
-        If the answer is not in the context, say: "Iam afraid, I can't help with the provided Query".
+        If the answer is not in the context, say: "Iam sorry, I can't help with the provided Query. Kindly contact collegefor further information".
 
         Context:
         {context_text}

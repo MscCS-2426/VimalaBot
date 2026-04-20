@@ -1,0 +1,154 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 248px;
+  flex-shrink: 0;
+  background: var(--crimson-dark);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sidebarLogo {
+  padding: 26px 22px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  flex-shrink: 0;
+}
+.logoText {
+  display: block;
+  font-family: var(--fd);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+.logoSub {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.55;
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 22px;
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-left 0.2s;
+  border-left: 3px solid transparent;
+}
+.navItem:hover {
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+.navActive {
+  background: rgba(255,255,255,0.14) !important;
+  color: #fff !important;
+  border-left-color: #fff !important;
+  padding-left: 19px;
+}
+
+.navIcon { font-size: 1rem; flex-shrink: 0; }
+
+.sidebarFooter {
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  flex-shrink: 0;
+}
+.adminInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.adminAvatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.adminName { font-size: 0.84rem; font-weight: 600; }
+.adminRole { font-size: 0.7rem; opacity: 0.55; margin-top: 1px; }
+.logoutBtn {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; color: rgba(255,255,255,0.6);
+  transition: color 0.2s;
+  padding: 0;
+}
+.logoutBtn:hover { color: #fff; }
+
+/* ── Main area ── */
+.main {
+  margin-left: 248px;
+  flex: 1;
+  padding: 30px 32px;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.pageTitle {
+  font-family: var(--fd);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--crimson);
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.liveBadge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(139,0,0,0.09); color: var(--crimson);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 0.76rem; font-weight: 600;
+  border: 1px solid var(--border);
+}
+.liveDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--crimson);
+  animation: pulse 1.5s infinite;
+}
+
+.tabContent { animation: fadeUp 0.28s ease both; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .sidebar { width: 200px; }
+  .main { margin-left: 200px; padding: 22px 20px; }
+}
+@media (max-width: 640px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 18px 16px; }
+}
