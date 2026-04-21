@@ -1,42 +1,72 @@
 import os
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+print("RUNNING FILE:", os.path.abspath(__file__))
+import uuid
 from sentence_transformers import SentenceTransformer
 from app.core.database import get_chroma_collection
+from docx import Document
 
-# Paths
+print("INGEST FILE RUNNING")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-SCRAPER_FILE = os.path.join(BASE_DIR, "..", "scraper", "export", "all.md")
-
-# Load model
+#SCRAPER_FILE = os.path.join(BASE_DIR, "..", "scraper", "export", "all.md")
+SCRAPER_FILE = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "../../../export/all.docx")
+)
+print("FILE PATH:", SCRAPER_FILE)
+print("EXISTS:", os.path.exists(SCRAPER_FILE))
 model = SentenceTransformer("all-MiniLM-L6-v2")
-
-# Use SAME DB as backend
 collection = get_chroma_collection("default")
+print("CALLING INGEST FUNCTION NOW")
+
+def clean_text(text):
+    lines = text.split("\n")
+    cleaned = []
+
+    for line in lines:
+        line = line.strip()
+
+        # remove junk
+        if len(line) < 40:
+            continue
+        if "Home" in line and "Admissions" in line:
+            continue
+
+        cleaned.append(line)
+
+    return "\n".join(cleaned)
+
+
+def split_by_sections(text, chunk_size=500):
+    words = text.split()
+    chunks = []
+
+    for i in range(0, len(words), chunk_size):
+        chunk = " ".join(words[i:i+chunk_size])
+        chunks.append(chunk)
+
+    return chunks
 
 
 def ingest_data():
-    if not os.path.exists(SCRAPER_FILE):
-        print("Scraper file not found!")
-        return
+    doc = Document(SCRAPER_FILE)
+    text = "\n".join([p.text for p in doc.paragraphs])
 
-    with open(SCRAPER_FILE, "r", encoding="utf-8") as f:
-        text = f.read()
+    text = clean_text(text)
+    chunks = split_by_sections(text)
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=300,
-        chunk_overlap=100
-    )
-    chunks = splitter.split_text(text)
-
-    print(f"Total chunks: {len(chunks)}")
+    print(f"Clean chunks: {len(chunks)}")
 
     embeddings = model.encode(chunks)
+    ids = [str(uuid.uuid4()) for _ in chunks]
 
-    for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
-        collection.add(
-            documents=[chunk],
-            embeddings=[emb.tolist()],
-            ids=[str(i)]
-        )
+    collection.add(
+        documents=chunks,
+        embeddings=[emb.tolist() for emb in embeddings],
+        ids=ids
+    )
 
-    print("✅ Data ingested into ChromaDB")
+    print("✅ Clean data ingested")
+
+
+# 🔥 THIS MUST BE OUTSIDE THE FUNCTION
+print("CALLING INGEST FUNCTION")
+ingest_data()
