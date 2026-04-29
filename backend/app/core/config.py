@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
     # Chat Configuration
     MAX_TOKENS: int = 500
-    TEMPERATURE: float = 0.7
+    TEMPERATURE: float = 0.1
     TOP_P: float = 1.0
     N_RESULTS: int = 5
     BASE_SYSTEM_PROMPT: str = (

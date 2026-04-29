@@ -9,7 +9,7 @@ print("INGEST FILE RUNNING")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 #SCRAPER_FILE = os.path.join(BASE_DIR, "..", "scraper", "export", "all.md")
 SCRAPER_FILE = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../../export/all.docx")
+    os.path.join(os.path.dirname(__file__), "../../../export/all_edited.docx")
 )
 print("FILE PATH:", SCRAPER_FILE)
 print("EXISTS:", os.path.exists(SCRAPER_FILE))
@@ -25,7 +25,7 @@ def clean_text(text):
         line = line.strip()
 
         # remove junk
-        if len(line) < 40:
+        if not line:
             continue
         if "Home" in line and "Admissions" in line:
             continue
@@ -70,3 +70,4 @@ def ingest_data():
 # 🔥 THIS MUST BE OUTSIDE THE FUNCTION
 print("CALLING INGEST FUNCTION")
 ingest_data()
+

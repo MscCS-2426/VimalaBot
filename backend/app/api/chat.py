@@ -123,3 +123,4 @@ async def stream_chat(message: ChatMessage):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
