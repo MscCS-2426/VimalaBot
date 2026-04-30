@@ -1,4 +1,5 @@
 import uuid
+import re
 from datetime import datetime
 from typing import List, Dict, Any
 
@@ -35,6 +36,8 @@ RESPONSE RULES:
 - No unnecessary explanation
 - Structured format preferred
 
+ELIGIBILITY FORMATTING:
+When you provide eligibility criteria for ANY course, you MUST format the entire criteria as bullet points. Do NOT use paragraph format for eligibility.
 
 STRICT BEHAVIOR:
 - Always polite and professional
@@ -81,10 +84,16 @@ Never ask for sensitive data
 
 COURSE FORMAT:
 - Duration
-- Eligibility
+- Eligibility (ALWAYS as bullet points)
 
-FOLLOW-UP:
-End every response with one short follow-up question. You must ONLY ask questions about topics explicitly covered in the provided document, ensuring you already have the answer prepared.
+FOLLOW-UP SUGGESTIONS:
+Provide 1-2 short, relevant follow-up suggestions the user can say or ask next. Format them exactly like this at the very end of your response:
+<FOLLOWUP>Suggestion 1</FOLLOWUP>
+<FOLLOWUP>Suggestion 2</FOLLOWUP>
+*IMPORTANT*: When asked about programs offered by the college, ALWAYS include these three specific follow-ups:
+<FOLLOWUP>UG</FOLLOWUP>
+<FOLLOWUP>PG</FOLLOWUP>
+<FOLLOWUP>PhD</FOLLOWUP>
 
 FALLBACK:
 "I may not have the most updated official information. Please refer to vimalacollege.edu.in"
@@ -251,6 +260,9 @@ class ChatService:
             system_prompt_override=message.system_prompt,
         )
 
+        follow_up_questions = re.findall(r'<FOLLOWUP>(.*?)</FOLLOWUP>', ai_response, flags=re.IGNORECASE)
+        clean_response = re.sub(r'<FOLLOWUP>.*?</FOLLOWUP>', '', ai_response, flags=re.IGNORECASE | re.DOTALL).strip()
+
         self.chat_sessions[message.session_id].append({
             "role": "user",
             "content": message.message,
@@ -259,14 +271,15 @@ class ChatService:
 
         self.chat_sessions[message.session_id].append({
             "role": "assistant",
-            "content": ai_response,
+            "content": clean_response,
             "timestamp": datetime.now().isoformat()
         })
 
         return ChatResponse(
-            response=ai_response,
+            response=clean_response,
             session_id=message.session_id,
-            sources=sources
+            sources=sources,
+            follow_up_questions=follow_up_questions
         )
 
 

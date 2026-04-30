@@ -19,6 +19,7 @@ class ChatResponse(BaseModel):
     response: str = Field(..., description="AI-generated response to the user's query")
     session_id: str = Field(..., description="Session ID for this conversation")
     sources: List[Dict[str, Any]] = Field(default=[], description="Relevant source documents used to generate the response")
+    follow_up_questions: List[str] = Field(default=[], description="Suggested follow-up questions for the user")
 
 
 class SessionCreate(BaseModel):

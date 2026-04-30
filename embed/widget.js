@@ -71,7 +71,11 @@
         session_id: sessionId,
         collection_name: COLLECTION,
       });
-      messages.push({ sender: "bot", text: data.response || data.answer || "No response." });
+      messages.push({ 
+        sender: "bot", 
+        text: data.response || data.answer || "No response.",
+        followUpQuestions: data.follow_up_questions || []
+      });
     } catch (e) {
       messages.push({ sender: "bot", text: "Error getting response. Please try again." });
     } finally {
@@ -104,7 +108,12 @@
       .vbot-msg.bot{background:#fff;color:#222;align-self:flex-start;border:1px solid #E5E5E5}
       .vbot-msg.user{background:${COLOR};color:#fff;align-self:flex-end}
       .vbot-msg.loading{opacity:.6;font-style:italic}
-      #vbot-input-area{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid #E5E5E5;background:#fff}
+      .vbot-followups{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;align-items:flex-start}
+      .vbot-followup-btn{background:transparent;color:${COLOR};border:1px solid ${COLOR};border-radius:12px;padding:6px 12px;font-size:13px;cursor:pointer;text-align:left;max-width:90%;transition:.2s}
+      .vbot-followup-btn:hover{background:${COLOR}15;transform:translateY(-1px)}
+      #vbot-footer-container{display:flex;flex-direction:column;border-top:1px solid #E5E5E5;background:#fff}
+      #vbot-input-area{display:flex;align-items:center;gap:8px;padding:12px 12px 6px 12px}
+      #vbot-powered-by{text-align:center;font-size:11px;color:#B22222;padding-bottom:8px}
       #vbot-input{flex:1;padding:10px 14px;border-radius:20px;border:1px solid #ccc;outline:none;font-size:14px}
       #vbot-input:focus{border-color:${COLOR};box-shadow:0 0 0 2px ${COLOR}22}
       #vbot-send{background:${COLOR};color:#fff;border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
@@ -154,9 +163,12 @@
         <div id="vbot-content">
           <div id="vbot-chat-view">
             <div id="vbot-messages"></div>
-            <div id="vbot-input-area">
-              <input id="vbot-input" type="text" placeholder="Type a message..." />
-              <button id="vbot-send">▶</button>
+            <div id="vbot-footer-container">
+              <div id="vbot-input-area">
+                <input id="vbot-input" type="text" placeholder="Type a message..." />
+                <button id="vbot-send">▶</button>
+              </div>
+              <div id="vbot-powered-by">Powered by Department of Computer Science</div>
             </div>
           </div>
           <div id="vbot-info" style="display:none"></div>
@@ -180,6 +192,13 @@
     const sendBtn = document.getElementById("vbot-send");
     sendBtn.onclick = () => { sendMessage(input.value); input.value = ""; };
     input.onkeydown = (e) => { if (e.key === "Enter") { sendMessage(input.value); input.value = ""; } };
+
+    document.getElementById("vbot-messages").addEventListener("click", (e) => {
+      if (e.target.classList.contains("vbot-followup-btn")) {
+        const q = e.target.getAttribute("data-question");
+        if (q) sendMessage(q);
+      }
+    });
   }
 
   function toggleWidget() {
@@ -234,9 +253,17 @@
   function renderMessages() {
     const container = document.getElementById("vbot-messages");
     if (!container) return;
-    let html = messages.map((m) =>
-      `<div class="vbot-msg ${m.sender}">${escapeHtml(m.text)}</div>`
-    ).join("");
+    let html = messages.map((m) => {
+      let msgHtml = `<div class="vbot-msg ${m.sender}">${formatTextWithLinks(m.text)}</div>`;
+      if (m.sender === "bot" && m.followUpQuestions && m.followUpQuestions.length > 0) {
+        msgHtml += `<div class="vbot-followups">`;
+        m.followUpQuestions.forEach((q) => {
+          msgHtml += `<button class="vbot-followup-btn" data-question="${escapeHtml(q)}">${escapeHtml(q)}</button>`;
+        });
+        msgHtml += `</div>`;
+      }
+      return msgHtml;
+    }).join("");
     if (loading) html += `<div class="vbot-msg bot loading">Thinking…</div>`;
     container.innerHTML = html;
     container.scrollTop = container.scrollHeight;
@@ -246,6 +273,36 @@
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  function formatTextWithLinks(text) {
+    const regex = /((?:https?:\/\/|www\.)[^\s]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|\b(?:(?:\+|00)91[-\s]?)?[6-9]\d{9}\b|\b0[1-9]\d{1,4}[-\s]?\d{6,8}\b|\bvimalacollege\.edu\.in\b)/gi;
+    const parts = text.split(regex);
+    return parts.map(part => {
+      if (!part) return '';
+      const lower = part.toLowerCase();
+      if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(part)) {
+        return `<a href="mailto:${escapeHtml(part)}" style="color:#0056b3;text-decoration:underline;">${escapeHtml(part)}</a>`;
+      }
+      if (lower === 'vimalacollege.edu.in' || lower === 'www.vimalacollege.edu.in') {
+        return `<a href="https://vimalacollege.edu.in" target="_blank" rel="noopener noreferrer" style="color:#0056b3;text-decoration:underline;">${escapeHtml(part)}</a>`;
+      }
+      if (/(?:https?:\/\/|www\.)[^\s]+/.test(part)) {
+        let cleanUrl = part;
+        let suffix = '';
+        if (/[.,;:]$/.test(cleanUrl)) {
+          suffix = cleanUrl.slice(-1);
+          cleanUrl = cleanUrl.slice(0, -1);
+        }
+        const href = cleanUrl.startsWith("http") ? cleanUrl : "https://" + cleanUrl;
+        return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" style="color:#0056b3;text-decoration:underline;">${escapeHtml(cleanUrl)}</a>${escapeHtml(suffix)}`;
+      }
+      if (/(?:(?:\+|00)91[-\s]?)?[6-9]\d{9}|\b0[1-9]\d{1,4}[-\s]?\d{6,8}\b/.test(part)) {
+        const tel = part.replace(/[-\s]/g, '');
+        return `<a href="tel:${escapeHtml(tel)}" style="color:#0056b3;text-decoration:underline;">${escapeHtml(part)}</a>`;
+      }
+      return escapeHtml(part);
+    }).join('');
   }
 
   // ── Init ──
