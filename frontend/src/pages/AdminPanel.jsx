@@ -5,6 +5,7 @@ import OverviewTab from '../components/admin/OverviewTab';
 import SessionsTab from '../components/admin/SessionsTab';
 import DocumentsTab from '../components/admin/DocumentsTab';
 import CollectionsTab from '../components/admin/CollectionsTab';
+import LogsTab from '../components/admin/LogsTab';
 import styles from './AdminPanel.module.css';
 
 const TABS = [
@@ -12,6 +13,7 @@ const TABS = [
   { id: 'sessions',    label: 'Chat Sessions',  icon: '💬' },
   { id: 'documents',   label: 'Documents / RAG',icon: '📄' },
   { id: 'collections', label: 'Collections',    icon: '🗂️' },
+  { id: 'logs',        label: 'Chat Logs',      icon: '📊' },
 ];
 
 export default function AdminPanel() {
@@ -86,6 +88,7 @@ export default function AdminPanel() {
           {activeTab === 'sessions'    && <SessionsTab />}
           {activeTab === 'documents'   && <DocumentsTab />}
           {activeTab === 'collections' && <CollectionsTab />}
+          {activeTab === 'logs'        && <LogsTab />}
         </div>
       </main>
     </div>

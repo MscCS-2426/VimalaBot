@@ -113,7 +113,7 @@
       .vbot-followup-btn:hover{background:${COLOR}15;transform:translateY(-1px)}
       #vbot-footer-container{display:flex;flex-direction:column;border-top:1px solid #E5E5E5;background:#fff}
       #vbot-input-area{display:flex;align-items:center;gap:8px;padding:12px 12px 6px 12px}
-      #vbot-powered-by{text-align:center;font-size:11px;color:#B22222;padding-bottom:8px}
+      #vbot-powered-by{text-align:center;font-size:11px;color:maroon;padding-bottom:8px}
       #vbot-input{flex:1;padding:10px 14px;border-radius:20px;border:1px solid #ccc;outline:none;font-size:14px}
       #vbot-input:focus{border-color:${COLOR};box-shadow:0 0 0 2px ${COLOR}22}
       #vbot-send{background:${COLOR};color:#fff;border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
@@ -168,7 +168,7 @@
                 <input id="vbot-input" type="text" placeholder="Type a message..." />
                 <button id="vbot-send">▶</button>
               </div>
-              <div id="vbot-powered-by">Powered by Department of Computer Science</div>
+              <div id="vbot-powered-by">© Powered by Department of Computer Science</div>
             </div>
           </div>
           <div id="vbot-info" style="display:none"></div>

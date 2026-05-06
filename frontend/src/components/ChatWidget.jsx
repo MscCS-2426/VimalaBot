@@ -167,7 +167,7 @@ export default function ChatWidget({ isOpen, onClose }) {
 
   // Start new chat
   const newChat = useCallback(() => {
-    setMessages([{ role: 'bot', content: '🆕 New conversation started! How can I help you?' }]);
+    setMessages([{ role: 'bot', content: ' New conversation started! How can I help you?' }]);
     setSessionId(null);
     setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
@@ -266,7 +266,7 @@ export default function ChatWidget({ isOpen, onClose }) {
             {sending ? <span className={styles.spinner} /> : '▶'}
           </button>
         </div>
-        <div className={styles.poweredBy}>Powered by Department of Computer Science</div>
+        <div className={styles.poweredBy}>© Powered by Department of Computer Science</div>
       </div>
 
     </div>

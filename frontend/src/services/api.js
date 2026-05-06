@@ -83,6 +83,30 @@ export async function adminStatus() {
   return apiFetch('/admin/status');
 }
 
+// GET /admin/logs/data → { logs: [...] }
+export async function getLogsData() {
+  return apiFetch('/admin/logs/data');
+}
+
+// Download CSV helper
+export async function downloadLogs() {
+  const token = getToken();
+  const res = await fetch(`${API_BASE}/admin/logs/download`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!res.ok) throw new Error('Download failed');
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `chat_logs_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+
 // ── DOCUMENTS ─────────────────────────────────────
 // POST /documents/upload  (multipart)
 export async function uploadDocument(file, collectionName = 'default') {

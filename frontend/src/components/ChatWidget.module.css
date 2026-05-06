@@ -146,7 +146,7 @@
 .poweredBy {
   text-align: center;
   font-size: 0.65rem;
-  color: #B22222; /* brick red */
+  color: maroon;
   padding-bottom: 8px;
   font-family: var(--fb);
 }

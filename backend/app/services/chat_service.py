@@ -8,6 +8,7 @@ from groq import Groq
 from ..core.config import settings
 from ..core.database import get_chroma_collection, get_embedding_model
 from ..models.chat import ChatMessage, ChatResponse
+from ..utils.logger import log_interaction
 
 TRAINING_PROMPT = """You are a Professional Admission Enquiry Chatbot for Vimala College (Autonomous), Thrissur, Kerala, India.
 CORE FACTS (ALWAYS TRUE):
@@ -19,10 +20,6 @@ ROLE:
 Provide accurate, polite, concise, structured information ONLY about:
 - College details
 - Courses (UG, PG, PhD)
-ROLE:
-Provide accurate, polite, concise, structured information ONLY about:
-- College details
-- Courses (UG, PG, PhD)
 - Eligibility
 - Admission process
 - Documents
@@ -30,11 +27,20 @@ Provide accurate, polite, concise, structured information ONLY about:
 - Timelines
 
 RESPONSE RULES:
-- Max 2–4 lines
+- Max 2–4 lines (unless listing exhaustive courses or explaining the admission process)
 - Formal tone
 - No emojis, no slang
 - No unnecessary explanation
 - Structured format preferred
+
+SPECIFIC REQUIREMENTS:
+1. **Course Listings**: Whenever a user asks about available courses, you MUST provide a complete and exhaustive list of all our courses found in the context. You are required to correctly categorize and display EVERY single course strictly under these TWO EXACT headers: 'Aided Courses' and 'Self-Financing Courses'. Ensure no course is left uncategorized or missing.
+2. **PhD Programs**: When PhD courses are discussed or asked about, you MUST list the PhD programs (e.g. English, Commerce, Physics, etc.) exactly like the PG and UG courses list, based on the provided context.
+3. **Admission Process**: When asked about the admission process, procedure, or how to apply, you MUST provide ALL the detailed information from the context. This includes the specific application links (FYUG/PG/MSW), the helpdesk phone numbers (+91-9605575589, +91-8921249092) and email (admission@vimalacollege.edu.in), and the specific note that admission is managed by the college itself without agencies/middlemen. Be thorough.
+4. **Accuracy & Hallucination**: Answer ONLY using the provided context. If the information is available in the context, provide it accurately and completely. IF YOU CANNOT FIND THE PARTICULAR INFORMATION IN THE CONTEXT, then:
+    - If the user is asking about a specific course (UG, PG, or PhD) that is not listed in the context, you MUST respond ONLY with: "This course is not available here. Please refer to vimalacollege.edu.in for further clarification."
+    - For any other missing information, respond ONLY with: "I may not have the most updated official information. Please refer to vimalacollege.edu.in".
+    Do not guess or provide general knowledge.
 
 ELIGIBILITY FORMATTING:
 When you provide eligibility criteria for ANY course, you MUST format the entire criteria as bullet points. Do NOT use paragraph format for eligibility.
@@ -50,10 +56,6 @@ Allowed: admissions, academics, documents
 Not allowed: politics, religion, legal advice, medical advice, comparisons, opinions
 If unrelated:
 "I am designed to assist only with information related to Vimala College (Autonomous), Thrissur admissions and academic programs."
-
-NO HALLUCINATION:
-- Answer ONLY using the provided context.
-- If the provided context contains the answer, provide it and DO NOT use the fallback phrase.
 
 DATE SAFETY:
 Do not generate dates → refer to website
@@ -82,10 +84,6 @@ Stay calm, redirect to topic
 DATA PRIVACY:
 Never ask for sensitive data
 
-COURSE FORMAT:
-- Duration
-- Eligibility (ALWAYS as bullet points)
-
 FOLLOW-UP SUGGESTIONS:
 Provide 1-2 short, relevant follow-up suggestions the user can say or ask next. Format them exactly like this at the very end of your response:
 <FOLLOWUP>Suggestion 1</FOLLOWUP>
@@ -96,7 +94,8 @@ Provide 1-2 short, relevant follow-up suggestions the user can say or ask next. 
 <FOLLOWUP>PhD</FOLLOWUP>
 
 FALLBACK:
-"I may not have the most updated official information. Please refer to vimalacollege.edu.in"
+- For unavailable courses: "This course is not available here. Please refer to vimalacollege.edu.in for further clarification."
+- For other information: "I may not have the most updated official information. Please refer to vimalacollege.edu.in"
 
 SPELLING:
 Understand typos automatically
@@ -178,9 +177,8 @@ class ChatService:
 
         messages = [{"role": "system", "content": system_prompt}]
 
-
         if history:
-            for msg in history :
+            for msg in history:
                 messages.append({"role": msg["role"], "content": msg["content"]})
 
         messages.append({"role": "user", "content": user_prompt})
@@ -207,8 +205,7 @@ class ChatService:
             )
 
         if not message.session_id:
-            message.session_id = str(uuid.uuid4())
-            self.chat_sessions[message.session_id] = []
+            message.session_id = self.create_session()
 
         # Get the history for this session
         session_history = self.chat_sessions[message.session_id]
@@ -229,17 +226,8 @@ class ChatService:
         )
 
         context = results.get('documents', [[]])[0]
-
         distances = results.get('distances', [[]])[0]
-
         metadatas = results.get('metadatas', [[]])[0]
-
-        if not context:
-            return ChatResponse(
-                response="I do not have official information about that. Please refer to the official website.",
-                session_id=message.session_id,
-                sources=[]
-            )
 
         sources = []
         for doc, meta, dist in zip(context, metadatas, distances):
@@ -275,6 +263,10 @@ class ChatService:
             "timestamp": datetime.now().isoformat()
         })
 
+        # Log interaction
+        log_interaction("User", message.message)
+        log_interaction("Assistant", clean_response)
+
         return ChatResponse(
             response=clean_response,
             session_id=message.session_id,
@@ -283,4 +275,4 @@ class ChatService:
         )
 
 
-chat_service = ChatService()
+chat_service = ChatService()
