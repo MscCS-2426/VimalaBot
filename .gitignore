@@ -29,8 +29,11 @@ chat_venv/
 .DS_Store
 Thumbs.db
 
-# Database files (if local, like your chroma_db)
+# Database and Data files
 chroma_db/
+data.json
+backend/data/*.csv
+backend/data/*.json
 
 # Runtime
 .pids/
