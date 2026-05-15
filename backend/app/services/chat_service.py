@@ -1,7 +1,7 @@
 import uuid
 import re
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from groq import Groq
 
@@ -26,6 +26,9 @@ Provide accurate, polite, concise, structured information ONLY about:
 - Application (OAP)
 - Timelines
 
+When introducing yourself, you MUST state that you are the official admission assistant. On the very last line of your introduction, you MUST include the following branding in a professional and structured manner:
+"A Department of Computer Science initiative"
+
 RESPONSE RULES:
 - Max 2–4 lines (unless listing exhaustive courses or explaining the admission process)
 - Formal tone
@@ -37,7 +40,8 @@ SPECIFIC REQUIREMENTS:
 1. **Course Listings**: Whenever a user asks about available courses, you MUST provide a complete and exhaustive list of all our courses found in the context. You are required to correctly categorize and display EVERY single course strictly under these TWO EXACT headers: 'Aided Courses' and 'Self-Financing Courses'. Ensure no course is left uncategorized or missing.
 2. **PhD Programs**: When PhD courses are discussed or asked about, you MUST list the PhD programs (e.g. English, Commerce, Physics, etc.) exactly like the PG and UG courses list, based on the provided context.
 3. **Admission Process**: When asked about the admission process, procedure, or how to apply, you MUST provide ALL the detailed information from the context. This includes the specific application links (FYUG/PG/MSW), the helpdesk phone numbers (+91-9605575589, +91-8921249092) and email (admission@vimalacollege.edu.in), and the specific note that admission is managed by the college itself without agencies/middlemen. Be thorough.
-4. **Accuracy & Hallucination**: Answer ONLY using the provided context. If the information is available in the context, provide it accurately and completely. IF YOU CANNOT FIND THE PARTICULAR INFORMATION IN THE CONTEXT, then:
+4. **Fees Inquiries**: If a user asks for fee details, structure, or payments for any course, you MUST NOT provide any amounts. Instead, respond with: "For detailed fee structure and payment information, please contact the office Help Desk at +91-9605575589 or +91-8921249092. You may also contact the college office at +91-487-2332080 or +91-487-2321759 for further assistance."
+5. **Accuracy & Hallucination**: Answer ONLY using the provided context. If the information is available in the context, provide it accurately and completely. IF YOU CANNOT FIND THE PARTICULAR INFORMATION IN THE CONTEXT, then:
     - If the user is asking about a specific course (UG, PG, or PhD) that is not listed in the context, you MUST respond ONLY with: "This course is not available here. Please refer to vimalacollege.edu.in for further clarification."
     - For any other missing information, respond ONLY with: "I may not have the most updated official information. Please refer to vimalacollege.edu.in".
     Do not guess or provide general knowledge.
@@ -109,6 +113,9 @@ Use previous conversation
 
 INTENT:
 If unclear → ask clarification
+
+FOLLOW-UP CONTEXT RULE:
+If user reply is only “UG”, “PG”, or “PhD”, treat it as a continuation of the most recent user topic (e.g., Zoology) and answer only for that topic, not all courses.
 """
 
 
@@ -149,6 +156,33 @@ class ChatService:
         return sessions_info
 
     #END SESSION MANAGEMENT METHODS
+
+    def _is_level_only_query(self, text: str) -> bool:
+        t = text.strip().lower()
+        return t in {"ug", "pg", "phd", "bsc", "msc", "ba", "ma", "bcom", "mcom"}
+
+    def _extract_level(self, text: str) -> Optional[str]:
+        t = text.strip().lower()
+        if "phd" in t:
+            return "PhD"
+        if "pg" in t or t in {"msc", "ma", "mcom", "msw"}:
+            return "PG"
+        if "ug" in t or t in {"bsc", "ba", "bcom", "bca"}:
+            return "UG"
+        return None
+
+    def _last_user_topic(self, session_history: List[Dict[str, Any]]) -> Optional[str]:
+        # Walk backward and pick the latest meaningful user query (not just UG/PG/PhD)
+        for msg in reversed(session_history):
+            if msg.get("role") != "user":
+                continue
+            q = (msg.get("content") or "").strip()
+            if not q:
+                continue
+            if self._is_level_only_query(q):
+                continue
+            return q
+        return None
 
     def is_valid_query(self, query: str) -> bool:
         blocked = ["hack", "attack", "illegal", "porn", "sex"]
@@ -212,8 +246,20 @@ class ChatService:
 
         # Contextual search logic
         search_query = message.message
-        # If the user gives a short answer, attach the last bot question for better RAG retrieval
-        if len(session_history) > 0 and len(message.message.split()) < 5:
+        normalized_msg = message.message.strip()
+
+        if len(session_history) > 0 and self._is_level_only_query(normalized_msg):
+            last_topic = self._last_user_topic(session_history)
+            level = self._extract_level(normalized_msg) or normalized_msg.upper()
+
+            if last_topic:
+                # Example: "UG details for Zoology courses"
+                search_query = f"{level} details for {last_topic}"
+            else:
+                # no prior topic, keep current and let model ask clarification
+                search_query = f"{level} courses at Vimala College"
+        elif len(session_history) > 0 and len(message.message.split()) < 5:
+            # Fallback for other short answers
             last_bot_msg = session_history[-1]["content"]
             search_query = f"{last_bot_msg} {message.message}"
 
@@ -238,7 +284,7 @@ class ChatService:
             })
 
         ai_response = self.generate_response(
-            query=message.message,
+            query=search_query,
             context=context,
             history=session_history,
             groq_model=message.groq_model,
@@ -275,4 +321,4 @@ class ChatService:
         )
 
 
-chat_service = ChatService()
+chat_service = ChatService()

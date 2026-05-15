@@ -1,0 +1,11 @@
+run = "bash replit_deploy.sh"
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["bash", "replit_deploy.sh"]
+
+[[ports]]
+localPort = 8080
+externalPort = 80

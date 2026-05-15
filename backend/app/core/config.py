@@ -15,9 +15,22 @@ class Settings(BaseSettings):
     @field_validator('BACKEND_CORS_ORIGINS')
     @classmethod
     def parse_cors_origins(cls, v):
+        origins = []
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',')]
-        return v
+            origins = [origin.strip() for origin in v.split(',')]
+        elif isinstance(v, list):
+            origins = v
+        
+        # Dynamically add Replit origin if applicable
+        repl_slug = os.getenv("REPL_SLUG")
+        repl_owner = os.getenv("REPL_OWNER")
+        if repl_slug and repl_owner:
+            # Older replit URLs
+            origins.append(f"https://{repl_slug}.{repl_owner}.repl.co")
+            # Newer replit URLs
+            origins.append(f"https://{repl_slug}.{repl_owner}.replit.app")
+            
+        return list(set(origins))  # Remove duplicates
 
     # Database Configuration
     CHROMA_DB_PATH: str = "./chroma_db"

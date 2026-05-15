@@ -1,7 +1,11 @@
 // src/services/api.js
 // All calls to FastAPI backend at /api/v1
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE = process.env.REACT_APP_API_URL || (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000/api/v1' 
+    : '/api/v1'
+);
 
 function getToken() {
   return sessionStorage.getItem('adminToken');

@@ -145,7 +145,7 @@ function Message({ msg, onFollowUpClick }) {
 // ── Main ChatWidget ──────────────────────────────────────────────
 export default function ChatWidget({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
-    { role: 'bot', content: '👋 Hi! I\'m Vimala Bot, your college assistant. How can I help you today?' },
+    { role: 'bot', content: 'Hi! I\'m Vimala Bot, your college assistant, a Department of Computer Science initiative. How can I help you today?' },
   ]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
