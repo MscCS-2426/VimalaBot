@@ -4,10 +4,13 @@ set -e
 echo "=== Starting Replit Deployment Setup ==="
 
 # 1. Install uv if not present
+# On Replit, we'll install it to a local bin directory
+export PATH="$HOME/.local/bin:$PATH"
+
 if ! command -v uv &> /dev/null; then
     echo "Installing uv..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    source $HOME/.cargo/env
+    # Install to $HOME/.local/bin which is usually writable on Replit
+    curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR="$HOME/.local/bin" sh
 fi
 
 # 2. Setup Backend
