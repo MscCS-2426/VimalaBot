@@ -7,5 +7,7 @@
     pkgs.openssl
     pkgs.zlib
     pkgs.glibcLocales
+    pkgs.stdenv.cc.cc.lib
+    pkgs.sqlite
   ];
 }

@@ -3,6 +3,9 @@ run = "bash replit_deploy.sh"
 [nix]
 channel = "stable-23_11"
 
+[env]
+LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib"
+
 [deployment]
 run = ["bash", "replit_deploy.sh"]
 

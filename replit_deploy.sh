@@ -6,6 +6,7 @@ echo "=== Starting Replit Deployment Setup ==="
 # 1. Install uv if not present
 # On Replit, we'll install it to a local bin directory
 export PATH="$HOME/.local/bin:$PATH"
+export LD_LIBRARY_PATH="/nix/store/$(ls /nix/store | grep -m1 gcc-.*-lib)/lib:$LD_LIBRARY_PATH"
 
 if ! command -v uv &> /dev/null; then
     echo "Installing uv..."
