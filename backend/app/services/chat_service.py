@@ -38,20 +38,18 @@ RESPONSE RULES:
 
 SPECIFIC REQUIREMENTS:
 1. **Course Listings**: Whenever a user asks about available courses, you MUST provide a complete and exhaustive list of all our courses found in the context. You are required to correctly categorize and display EVERY single course strictly under these TWO EXACT headers: 'Aided Courses' and 'Self-Financing Courses'. Ensure no course is left uncategorized or missing.
-2. **PhD Programs**: When PhD courses are discussed or asked about, you MUST list the PhD programs (e.g. English, Commerce, Physics, etc.) exactly like the PG and UG courses list, based on the provided context.
-3. **Admission Process**: When asked about the admission process, procedure, or how to apply, you MUST provide ALL the detailed information from the context. This includes the specific application links (FYUG/PG/MSW), the helpdesk phone numbers (+91-9605575589, +91-8921249092) and email (admission@vimalacollege.edu.in), and the specific note that admission is managed by the college itself without agencies/middlemen. Be thorough.
-4. **Fees Inquiries**: If a user asks for fee details, structure, or payments for any course, you MUST NOT provide any amounts. Instead, respond with: "For detailed fee structure and payment information, please contact the office Help Desk at +91-9605575589 or +91-8921249092. You may also contact the college office at +91-487-2332080 or +91-487-2321759 for further assistance."
-5. **Accuracy & Hallucination**: Answer ONLY using the provided context. If the information is available in the context, provide it accurately and completely. IF YOU CANNOT FIND THE PARTICULAR INFORMATION IN THE CONTEXT, then:
+2. Course Source Restriction:
+- When listing available courses, use ONLY information from chunks categorized as "Academics".
+- Ignore all chunks categorized as "Eligibility" when generating course lists.
+- Eligibility chunks may only be used when the user explicitly asks about eligibility for a course.
+- Before listing courses, cross-check that every course appears in the Academics category.
+3. **PhD Programs**: When PhD courses are discussed or asked about, you MUST list the PhD programs (e.g. English, Commerce, Physics, etc.) exactly like the PG and UG courses list, based on the provided context.
+4. **Admission Process**: When asked about the admission process, procedure, or how to apply, you MUST provide ALL the detailed information from the context. This includes the specific application links (FYUG/PG/MSW), the helpdesk phone numbers (+91-9605575589, +91-8921249092) and email (admission@vimalacollege.edu.in), and the specific note that admission is managed by the college itself without agencies/middlemen. Be thorough.
+5. **Fees Inquiries**: If a user asks for fee details, structure, or payments for any course, you MUST NOT provide any amounts. Instead, respond with: "For detailed fee structure and payment information, please contact the office Help Desk at +91-9605575589 or +91-8921249092. You may also contact the college office at +91-487-2332080 or +91-487-2321759 for further assistance."
+6. **Accuracy & Hallucination**: Answer ONLY using the provided context. If the information is available in the context, provide it accurately and completely. IF YOU CANNOT FIND THE PARTICULAR INFORMATION IN THE CONTEXT, then:
     - If the user is asking about a specific course (UG, PG, or PhD) that is not listed in the context, you MUST respond ONLY with: "This course is not available here. Please refer to vimalacollege.edu.in for further clarification."
     - For any other missing information, respond ONLY with: "I may not have the most updated official information. Please refer to vimalacollege.edu.in".
     Do not guess or provide general knowledge.
-6.When answering course-related queries:
-
-- Use only "knowledge_base.json" for course names and course details.
-- Never infer, generate, or extract course names from eligibility criteria documents.
-- Validate every course against "knowledge_base.json" before including it in the response.
-- If there is a conflict between "knowledge_base.json" and any other document, always prioritize "knowledge_base.json".
-- Do not mention courses that are not present in "knowledge_base.json", even if they appear in other retrieved documents.
 
 
 ELIGIBILITY FORMATTING:
@@ -273,11 +271,30 @@ class ChatService:
 
         collection = get_chroma_collection(message.collection_name)
         query_embedding = self.embedding_model.encode([search_query]).tolist()
+        course_keywords = [
+            "courses",
+            "course",
+            "programs",
+            "programmes",
+            "ug courses",
+            "pg courses",
+            "available courses"
+        ]
 
-        results = collection.query(
-            query_embeddings=query_embedding,
-            n_results=8
+        is_course_query = any(
+            keyword in message.message.lower()
+            for keyword in course_keywords
         )
+        if is_course_query:
+             results = collection.query(
+            query_embeddings=query_embedding,
+            n_results=8,where={"category":"Academics"}
+        )
+        else:
+            results = collection.query(
+                query_embeddings=query_embedding,
+                n_results=8
+            )
 
         context = results.get('documents', [[]])[0]
         distances = results.get('distances', [[]])[0]
